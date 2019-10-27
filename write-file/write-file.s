@@ -25,4 +25,6 @@ section .data
     msg db "Hello World", 10
     len equ $ - msg
     fileName db "test.txt", 0
-    fd dq 0
+
+section .bss
+    fd resq 1
