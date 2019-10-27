@@ -8,11 +8,7 @@ stdout equ 1
 _start:
 	mov rsi, text
 	call print
-
-	; Exit
-	mov rax, sys_exit
-	mov rdi, 0
-	syscall
+	call exit
 
 ; input: 0-terminated string at rsi
 ; output: prints string on stdout
@@ -30,6 +26,12 @@ print:
 
 print.end:
 	ret
+
+; exits the program
+exit:
+	mov rax, sys_exit
+	mov rdi, 0
+	syscall
 
 section .data
 	text db "Hello", 10, 0
