@@ -175,9 +175,6 @@ section .rodata
 		0, 1, 2, 8, \
 		0, 2, 5, 6, \
 		0, 5, 1, 2
-	
-	carryBit db 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-	subtraction db 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
 
 section .bss
 	result resb maxIntDigits
