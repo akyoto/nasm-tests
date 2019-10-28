@@ -8,11 +8,11 @@ maxIntDigits equ 19
 iterations equ 10000000
 
 _start:
-	mov r8, iterations
+	mov r15, iterations
 again:
-	mov rax, 256
+	mov rax, 1023
 	call printInt
-	dec r8
+	dec r15
 	jnz again
 
 	mov rax, sys_write
