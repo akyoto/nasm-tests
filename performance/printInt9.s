@@ -35,19 +35,22 @@ unsigned:
 	mov r8, 0x6666666666666667
 
 loop2:
-	mov rax, rdi
-	mul r8
-	mov rax, rdx
-	shr rax, byte 63
-	sar rdx, byte 2
-	add rdx, rax
-	lea eax, [rdx+rdx]
-	lea eax, [rax+rax*4]
-	mov ecx, edi
-	sub ecx, eax
+	mov rax, rdi			; rax = value
+	mul r8					; rax *= magic number, rdx = overflow
+	mov rax, rdx			; rax = rdx // (shift mul result by 32 to the right)
+	shr rax, byte 63		; rax >>= 63
+	sar rdx, byte 2			; rdx = rotateRight(rdx, 2)
+	add rdx, rax			; rdx += rax
+	lea eax, [rdx+rdx]		; eax = rdx * 2
+	lea eax, [rax+rax*4]	; eax = rax + rax * 4
+	mov ecx, edi			; ecx = edi
+	sub ecx, eax			; ecx -= eax
+
+	; Turn it into ASCII and save it on the stack
 	add cl, 48
 	mov [rsi], cl
 	inc rsi
+
 	cmp rdi, byte 9
 	mov rdi, rdx
 	ja loop2
