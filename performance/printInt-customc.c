@@ -4,27 +4,41 @@
 
 const int iterations = 10000000;
 
-void itoa(int64_t i, char b[]) {
-    char *p = b;
+void itoa(int64_t value, char *p) {
+	if(value < 0) {
+		*p++ = '-';
+		value *= -1;
+	}
 
-    if(i<0) {
-        *p++ = '-';
-        i *= -1;
-    }
+	int64_t shifter = value;
 
-    int64_t shifter = i;
+	do{ //Move to where representation ends
+		++p;
+		shifter = shifter / 10;
+	} while(shifter);
 
-    do{ //Move to where representation ends
-        ++p;
-        shifter = shifter/10;
-    } while(shifter);
+	*p = '\0';
 
-    *p = '\0';
+	do{ //Move back, inserting digits as u go
+		*--p = value % 10 + 0x30;
+		value /= 10;
+	} while(value);
+}
 
-    do{ //Move back, inserting digits as u go
-        *--p = i%10 + 0x30;
-        i /= 10;
-    } while(i);
+void itoa2(int64_t value, char *p) {
+	if(value < 0) {
+		*p = '-';
+		p++;
+		value *= -1;
+	}
+
+	do{
+		*p = value % 10 + 0x30;
+		value /= 10;
+		p++;
+	} while(value);
+
+	*p = '\0';
 }
 
 int main() {
@@ -32,7 +46,7 @@ int main() {
 	char buffer[20];
 
 	for(int i = 0; i < iterations; i++) {
-		itoa(value, buffer);
+		itoa2(value, buffer);
 	}
 
 	printf("%s", buffer);
