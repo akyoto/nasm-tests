@@ -25,28 +25,12 @@ void itoa(int64_t value, char *p) {
 	} while(value);
 }
 
-void itoa2(int64_t value, char *p) {
-	if(value < 0) {
-		*p = '-';
-		p++;
-		value *= -1;
-	}
-
-	do{
-		*p = value % 10 + 0x30;
-		value /= 10;
-		p++;
-	} while(value);
-
-	*p = '\0';
-}
-
 int main() {
 	int64_t value = 123456789123456789;
 	char buffer[20];
 
 	for(int i = 0; i < iterations; i++) {
-		itoa2(value, buffer);
+		itoa(value, buffer);
 	}
 
 	printf("%s", buffer);
