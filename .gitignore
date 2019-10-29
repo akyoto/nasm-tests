@@ -2,6 +2,7 @@
 !*/
 !*.s
 !*.c
+!*.ll
 !README.md
 !LICENSE
 !.gitignore

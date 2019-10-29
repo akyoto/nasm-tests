@@ -12,14 +12,14 @@ void itoa(int64_t value, char *p) {
 
 	int64_t shifter = value;
 
-	do{ //Move to where representation ends
+	do {
 		++p;
 		shifter = shifter / 10;
 	} while(shifter);
 
 	*p = '\0';
 
-	do{ //Move back, inserting digits as u go
+	do {
 		*--p = value % 10 + 0x30;
 		value /= 10;
 	} while(value);

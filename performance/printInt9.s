@@ -26,7 +26,7 @@ printInt:
 	jns unsigned
 
 signed:
-	mov byte [rsi], 0x2d
+	mov byte [rsi], 45
 	inc rsi
 	neg rdi
 
@@ -38,18 +38,18 @@ loop2:
 	mov rax, rdi
 	mul r8
 	mov rax, rdx
-	shr rax, byte 0x3f
-	sar rdx, byte 0x2
+	shr rax, byte 63
+	sar rdx, byte 2
 	add rdx, rax
 	lea eax, [rdx+rdx]
 	lea eax, [rax+rax*4]
 	mov ecx, edi
 	sub ecx, eax
-	add cl, 0x30
+	add cl, 48
 	mov [rsi], cl
-	add rdi, byte +0x9
+	add rdi, byte 9
 	inc rsi
-	cmp rdi, byte +0x12
+	cmp rdi, byte 18
 	mov rdi, rdx
 	ja loop2
 
