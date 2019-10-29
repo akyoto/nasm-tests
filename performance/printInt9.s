@@ -31,6 +31,7 @@ signed:
 	neg rdi
 
 unsigned:
+	mov r9, rsi
 	mov r8, 0x6666666666666667
 
 loop2:
@@ -56,13 +57,13 @@ cleanup:
 	; Null-terminate
 	mov byte [rsi], 0
 
-	; Save length in r8
+	; Save length of used buffer in r8
 	mov r8, rsi
 	sub r8, rsp
 
 reverse.init:
 	dec rsi
-	mov rax, rsp
+	mov rax, r9
 
 reverse:
 	mov byte bl, [rsi]
