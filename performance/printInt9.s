@@ -47,9 +47,8 @@ loop2:
 	sub ecx, eax
 	add cl, 48
 	mov [rsi], cl
-	add rdi, byte 9
 	inc rsi
-	cmp rdi, byte 18
+	cmp rdi, byte 9
 	mov rdi, rdx
 	ja loop2
 
