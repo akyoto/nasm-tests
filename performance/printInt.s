@@ -10,7 +10,7 @@ iterations equ 10000000
 _start:
 	mov r15, iterations
 again:
-	mov rax, 1023
+	mov rax, 123456789
 	call printInt
 	dec r15
 	jnz again
