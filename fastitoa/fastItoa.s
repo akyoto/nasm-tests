@@ -16,7 +16,7 @@ _start:
 
 again:
 	; Call itoa
-	mov rax, -123456789123456789
+	mov rax, 123456789123456789
 	mov rsi, rsp
 	call itoa
 	dec r15
@@ -39,6 +39,7 @@ again:
 	call exit
 
 ; input: rax (number), rsi (buffer)
+ALIGN 32
 itoa:
 	mov r12, rsi
 
@@ -75,18 +76,7 @@ nextDigit:
 	call reverse
 	ret
 
-; input: rsi, r11
-reverse:
-	mov byte bl, [rsi]
-	mov byte cl, [r11]
-	mov byte [rsi], cl
-	mov byte [r11], bl
- 	inc r11
- 	dec rsi
- 	cmp rsi, r11
- 	jg reverse
-	ret
-
+ALIGN 32
 fastDivMod:
 	; Store copy of rax in rbx
 	mov rbx, rax
@@ -105,6 +95,19 @@ fastDivMod:
 	mov r9, rbx
 
 	; Return
+	ret
+
+; input: rsi, r11
+ALIGN 32
+reverse:
+	mov byte bl, [rsi]
+	mov byte cl, [r11]
+	mov byte [rsi], cl
+	mov byte [r11], bl
+ 	inc r11
+ 	dec rsi
+ 	cmp rsi, r11
+ 	jg reverse
 	ret
 
 exit:
