@@ -1,31 +1,32 @@
 global _start
 
 _start:
+	mov r15, 10000000
+	mov r14, 0x6666666666666667
+
+loop:
 	call fast
+	dec r15
+	jnz loop
+
 	call exit
 
 normal:
-	xor rdx, rdx
 	mov rax, 128
+	xor rdx, rdx
 	mov rbx, 10
 	div rbx
-	mov r14, rax
+	mov r8, rax
 	ret
 
 fast:
-	mov r8, 0x6666666666666667
-	; TODO
+	mov rax, 128
+	mul r14
+	shr rdx, byte 2
+	mov r8, rdx
+	ret
 
-; uint64_t edxeax = ((uint64_t)eax) * ctx->mult;
-; uint32_t edx = edxeax>>32;
-; eax -= edx;
-; eax >>= (ctx->shift1);
-; eax += edx;
-; eax >>= (ctx->shift2);
-; return eax;
-
-; exits the program
 exit:
 	mov rax, 60
-	mov rdi, r14
+	mov rdi, r8
 	syscall
