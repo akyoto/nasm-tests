@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-const int iterations = 10000000;
+const int iterations = 100000000;
 
 void itoa(int64_t value, char *p) {
 	if(value < 0) {
@@ -26,11 +26,10 @@ void itoa(int64_t value, char *p) {
 }
 
 int main() {
-	int64_t value = 123456789123456789;
 	char buffer[20];
 
-	for(int i = 0; i < iterations; i++) {
-		itoa(value, buffer);
+	for(int64_t i = 0; i < iterations; i++) {
+		itoa(i, buffer);
 	}
 
 	printf("%s", buffer);
