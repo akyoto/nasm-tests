@@ -58,26 +58,143 @@ unsigned:
 	mov r11, rsi
 	mov r14, 0x6666666666666667
 
-nextDigit:
-	mov rax, r8
-	call fastDivMod
-	add r9b, 0x30
-	mov byte [rsi], r9b
-	inc rsi
-	cmp r8, 0
-	jg nextDigit
+	; Determine number of digits
+	cmp rax, 10
+	jl has1digit
+	cmp rax, 100
+	jl has2digits
+	cmp rax, 1000
+	jl has3digits
+	cmp rax, 10000
+	jl has4digits
+	cmp rax, 100000
+	jl has5digits
+	cmp rax, 1000000
+	jl has6digits
+	cmp rax, 10000000
+	jl has7digits
+	cmp rax, 100000000
+	jl has8digits
+	cmp rax, 1000000000
+	jl has9digits
+	mov rbx, 10000000000
+	cmp rax, rbx
+	jl has10digits
+	mov rbx, 100000000000
+	cmp rax, rbx
+	jl has11digits
+	mov rbx, 1000000000000
+	cmp rax, rbx
+	jl has12digits
+	mov rbx, 10000000000000
+	cmp rax, rbx
+	jl has13digits
+	mov rbx, 100000000000000
+	cmp rax, rbx
+	jl has14digits
+	mov rbx, 1000000000000000
+	cmp rax, rbx
+	jl has15digits
+	mov rbx, 10000000000000000
+	cmp rax, rbx
+	jl has16digits
+	mov rbx, 100000000000000000
+	cmp rax, rbx
+	jl has17digits
+	mov rbx, 1000000000000000000
+	cmp rax, rbx
+	jl has18digits
 
-	; Save length of used buffer in r10
+has19digits:
+	add rsi, 18
+	jmp has1digit
+
+has18digits:
+	add rsi, 17
+	jmp has1digit
+
+has17digits:
+	add rsi, 16
+	jmp has1digit
+
+has16digits:
+	add rsi, 15
+	jmp has1digit
+
+has15digits:
+	add rsi, 14
+	jmp has1digit
+
+has14digits:
+	add rsi, 13
+	jmp has1digit
+
+has13digits:
+	add rsi, 12
+	jmp has1digit
+
+has12digits:
+	add rsi, 11
+	jmp has1digit
+
+has11digits:
+	add rsi, 10
+	jmp has1digit
+
+has10digits:
+	add rsi, 9
+	jmp has1digit
+
+has9digits:
+	add rsi, 8
+	jmp has1digit
+
+has8digits:
+	add rsi, 7
+	jmp has1digit
+
+has7digits:
+	add rsi, 6
+	jmp has1digit
+
+has6digits:
+	add rsi, 5
+	jmp has1digit
+
+has5digits:
+	add rsi, 4
+	jmp has1digit
+
+has4digits:
+	add rsi, 3
+	jmp has1digit
+
+has3digits:
+	add rsi, 2
+	jmp has1digit
+
+has2digits:
+	add rsi, 1
+
+ALIGN 32
+has1digit:
+	; Length of used buffer in r10
 	mov r10, rsi
 	sub r10, r12
+	inc r10
 
-	; Reverse
+nextDigit:
+	mov rax, r8
+	call fastDivMod10
+	add r9b, 0x30
+	mov byte [rsi], r9b
 	dec rsi
-	call reverse
+	cmp r8, 0
+	jg nextDigit
 	ret
 
 ALIGN 32
-fastDivMod:
+fastDivMod10:
 	; Store copy of rax in rbx
 	mov rbx, rax
 
@@ -95,19 +212,6 @@ fastDivMod:
 	mov r9, rbx
 
 	; Return
-	ret
-
-; input: rsi, r11
-ALIGN 32
-reverse:
-	mov byte bl, [rsi]
-	mov byte cl, [r11]
-	mov byte [rsi], cl
-	mov byte [r11], bl
- 	inc r11
- 	dec rsi
- 	cmp rsi, r11
- 	jg reverse
 	ret
 
 exit:
