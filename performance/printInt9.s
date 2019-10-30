@@ -1,19 +1,20 @@
+; (C) Copyright 2019 Eduard Urbach
 global _start
 
 ; Constants
 sys_write equ 1
 sys_exit equ 60
 stdout equ 1
-maxIntDigits equ 20
+maxDigits equ 20
 iterations equ 10000000
 
 _start:
 	push rbp
-	sub rsp, maxIntDigits
+	sub rsp, maxDigits
 	mov r15, iterations
 
 again:
-	mov rdi, 123456789123456789
+	mov rdi, 123456789
 	mov rsi, rsp
 
 ; input: rdi: number to convert
@@ -31,29 +32,43 @@ signed:
 	neg rdi
 
 unsigned:
-	mov r9, rsi
 	mov r8, 0x6666666666666667
+	mov r9, rsi
 
-loop2:
-	mov rax, rdi			; rax = value
-	mul r8					; rax *= magic number, rdx = overflow
-	mov rax, rdx			; rax = rdx // (shift mul result by 32 to the right)
-	shr rax, byte 63		; rax >>= 63
-	shr rdx, byte 2			; rdx >>= 2
-	add rdx, rax			; rdx += rax
-	lea eax, [rdx+rdx]		; eax = rdx * 2
-	lea eax, [rax+rax*4]	; eax = rax + rax * 4
-	mov ecx, edi			; ecx = edi
-	sub ecx, eax			; ecx -= eax
+nextDigit:
+	; Store value in rax
+	; rax = rdi
+	mov rax, rdi
+
+	; Calculate division by 10
+	; rdx:rax = rax * r8
+	; rax >>= 2
+	mul r8
+	shr rdx, byte 2
+
+	; Multiply result by 10 again
+	; rax = rdx * 2
+	; rax = rax * 5
+	lea rax, [rdx+rdx]
+	lea rax, [rax+rax*4]
+
+	; Subtract from actual value to get the remainder
+	mov rcx, rdi
+	sub rcx, rax
+
+	; State (example):
+	; rdi = 128
+	; rax = 120 = x - (x % 10)
+	; rcx = 8 = x % 10
+	; rdx = 12 = x / 10
 
 	; Turn it into ASCII and save it on the stack
 	add cl, 48
-	mov [rsi], cl
-	inc rsi
+	mov byte [rsi], cl
 
-	cmp rdi, byte 9
-	mov rdi, rdx
-	ja loop2
+	inc rsi
+	cmp rdx, 0
+	jg nextDigit
 
 cleanup:
 	; Null-terminate
@@ -87,7 +102,7 @@ final:
 	mov rsi, rsp
 	syscall
 
-	add rsp, maxIntDigits
+	add rsp, maxDigits
 	pop rbp
 
 	call exit

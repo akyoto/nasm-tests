@@ -7,12 +7,16 @@ _start:
 	mov r14, 0x6666666666666667
 
 benchmark:
+	mov rax, r15
 	call fastDivMod
 	dec r15
 	jnz benchmark
 
 finish:
-	mov rax, 128
+	mov rax, 123456789
+	call fastDivMod
+
+	mov rax, 123456789
 	call printInt
 
 	mov rax, r8
@@ -24,7 +28,6 @@ finish:
 	call exit
 
 normalDivMod:
-	mov rax, 128
 	xor rdx, rdx
 	mov rbx, 10
 	div rbx
@@ -33,23 +36,21 @@ normalDivMod:
 	ret
 
 fastDiv:
-	mov rax, 128
 	mul r14
 	shr rdx, byte 2
 	mov r8, rdx
 	ret
 
 fastDivMod:
-	; Store value in rax and rbx
-	mov rax, 128
+	; Store copy of rax in rbx
 	mov rbx, rax
 
-	; Calculate division by 10
+	; Divide by 10 and save in rdx
 	mul r14
 	shr rdx, byte 2
 	mov r8, rdx
 
-	; Multiply result by 10 again, store it in rax
+	; Multiply by 10 and save in rax
 	lea rax, [rdx+rdx]
 	lea rax, [rax+rax*4]
 
