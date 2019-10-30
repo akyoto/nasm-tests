@@ -28,7 +28,7 @@ void itoa(int64_t value, char *p) {
 int main() {
 	char buffer[20];
 
-	for(int64_t i = 0; i < iterations; i++) {
+	for(int64_t i = iterations; i != 0; i--) {
 		itoa(i, buffer);
 	}
 
