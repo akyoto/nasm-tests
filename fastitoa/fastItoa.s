@@ -59,151 +59,20 @@ unsigned:
 	mov r11, rsi
 	mov r14, 0x6666666666666667
 
-	; Determine number of digits
-	mov rbx, 1000000000000000000
-	cmp rax, rbx
-	jge has19digits
-	mov rbx, 100000000000000000
-	cmp rax, rbx
-	jge has18digits
-	mov rbx, 10000000000000000
-	cmp rax, rbx
-	jge has17digits
-	mov rbx, 1000000000000000
-	cmp rax, rbx
-	jge has16digits
-	mov rbx, 100000000000000
-	cmp rax, rbx
-	jge has15digits
-	mov rbx, 10000000000000
-	cmp rax, rbx
-	jge has14digits
-	mov rbx, 1000000000000
-	cmp rax, rbx
-	jge has13digits
-	mov rbx, 100000000000
-	cmp rax, rbx
-	jge has12digits
-	mov rbx, 10000000000
-	cmp rax, rbx
-	jge has11digits
-	mov rbx, 1000000000
-	cmp rax, rbx
-	jge has10digits
-	mov rbx, 100000000
-	cmp rax, rbx
-	jge has9digits
-	mov rbx, 10000000
-	cmp rax, rbx
-	jge has8digits
-	mov rbx, 1000000
-	cmp rax, rbx
-	jge has7digits
-	mov rbx, 100000
-	cmp rax, rbx
-	jge has6digits
-	mov rbx, 10000
-	cmp rax, rbx
-	jge has5digits
-	mov rbx, 1000
-	cmp rax, rbx
-	jge has4digits
-	mov rbx, 100
-	cmp rax, rbx
-	jge has3digits
-	mov rbx, 10
-	cmp rax, rbx
-	jge has2digits
-	jmp has1digit
+	; Number of leading zeros
+	mov rax, 123456789123456789
+	lzcnt rbx, rax
+	jc has1digit
+	mov bl, byte [guessLog10+rbx]
+	mov rcx, [powersOf10+rbx]
+	cmp rax, rcx
+	jl lower
 
-ALIGN 4
-has19digits:
-	add rsi, 18
-	jmp has1digit
+greaterEqual:
+	inc rbx
 
-ALIGN 4
-has18digits:
-	add rsi, 17
-	jmp has1digit
-
-ALIGN 4
-has17digits:
-	add rsi, 16
-	jmp has1digit
-
-ALIGN 4
-has16digits:
-	add rsi, 15
-	jmp has1digit
-
-ALIGN 4
-has15digits:
-	add rsi, 14
-	jmp has1digit
-
-ALIGN 4
-has14digits:
-	add rsi, 13
-	jmp has1digit
-
-ALIGN 4
-has13digits:
-	add rsi, 12
-	jmp has1digit
-
-ALIGN 4
-has12digits:
-	add rsi, 11
-	jmp has1digit
-
-ALIGN 4
-has11digits:
-	add rsi, 10
-	jmp has1digit
-
-ALIGN 4
-has10digits:
-	add rsi, 9
-	jmp has1digit
-
-ALIGN 4
-has9digits:
-	add rsi, 8
-	jmp has1digit
-
-ALIGN 4
-has8digits:
-	add rsi, 7
-	jmp has1digit
-
-ALIGN 4
-has7digits:
-	add rsi, 6
-	jmp has1digit
-
-ALIGN 4
-has6digits:
-	add rsi, 5
-	jmp has1digit
-
-ALIGN 4
-has5digits:
-	add rsi, 4
-	jmp has1digit
-
-ALIGN 4
-has4digits:
-	add rsi, 3
-	jmp has1digit
-
-ALIGN 4
-has3digits:
-	add rsi, 2
-	jmp has1digit
-
-ALIGN 4
-has2digits:
-	add rsi, 1
+lower:
+	add rsi, rbx
 
 ALIGN 4
 has1digit:
@@ -249,13 +118,15 @@ exit:
 	syscall
 
 section .rodata
-	guessLog10 db	0, 0, 0, 0, 1, 1, 1, 2, 2, 2,  \
-					3, 3, 3, 3, 4, 4, 4, 5, 5, 5,  \
-					6, 6, 6, 6, 7, 7, 7, 8, 8, 8,  \
-					9, 9, 9, 9, 10, 10, 10, 11, 11, 11, \
-					12, 12, 12, 12, 13, 13, 13, 14, 14, 14, \
-					15, 15, 15, 15, 16, 16, 16, 17, 17, 17, \
-					18, 18, 18, 18, 19
+	; guessLog10 db	0, 0, 0, 0, 1, 1, 1, 2, 2, 2,  \
+	; 				3, 3, 3, 3, 4, 4, 4, 5, 5, 5,  \
+	; 				6, 6, 6, 6, 7, 7, 7, 8, 8, 8,  \
+	; 				9, 9, 9, 9, 10, 10, 10, 11, 11, 11, \
+	; 				12, 12, 12, 12, 13, 13, 13, 14, 14, 14, \
+	; 				15, 15, 15, 15, 16, 16, 16, 17, 17, 17, \
+	; 				18, 18, 18, 18, 19
+
+	guessLog10 db 19, 18, 18, 18, 18, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 13, 13, 13, 12, 12, 12, 12, 11, 11, 11, 10, 10, 10, 9, 9, 9, 9, 8, 8, 8, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0
 
 	powersOf10 dq \
 		1, \
