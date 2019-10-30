@@ -219,6 +219,3 @@ exit:
 	mov rax, 60
 	mov rdi, 0
 	syscall
-
-section .data
-	digits db "0123456789"
