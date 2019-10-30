@@ -22,6 +22,7 @@ again:
 	dec r15
 	jnz again
 
+finish:
 	; Write the generated string and return
 	mov rax, 1
 	mov rdi, 1
