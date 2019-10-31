@@ -13,21 +13,21 @@ _start:
 	sub rsp, maxDigits
 
 	; Repeat n times
-	mov r15, iterations
+	mov r12, iterations
 
 again:
 	; Call itoa
-	mov rax, r15
+	mov rdi, r12
 	mov rsi, rsp
 	call itoa
-	dec r15
+	dec r12
 	jnz again
 
 finish:
 	; Write the generated string and return
 	mov rax, 1
 	mov rdi, 1
-	mov rdx, r10
+	mov rdx, r9
 	mov rsi, rsp
 	syscall
 
@@ -40,33 +40,31 @@ finish:
 	; Exit program
 	call exit
 
-; input: rax (number), rsi (buffer)
+; input: rdi (number), rsi (buffer)
 ALIGN 32
 itoa:
-	mov r12, rsi
+	mov r8, 0x6666666666666667
+	mov r10, rsi
 
 	; For positive numbers, jump straight to "unsigned".
 	; For negative numbers, we'll run the "signed" part.
-	test rax, rax
+	test rdi, rdi
 	jns unsigned
 
 signed:
 	mov byte [rsi], 45
 	inc rsi
-	neg rax
+	neg rdi
 
 unsigned:
-	mov r8, rax
 	mov r11, rsi
-	mov r14, 0x6666666666666667
 
 	; Number of leading zeros
-	mov rax, 123456789123456789
-	lzcnt rbx, rax
+	lzcnt rbx, rdi
 	jc has1digit
 	mov bl, byte [guessLog10+rbx]
 	mov rcx, [powersOf10+rbx]
-	cmp rax, rcx
+	cmp rdi, rcx
 	jl lower
 
 greaterEqual:
@@ -77,38 +75,39 @@ lower:
 
 ALIGN 4
 has1digit:
-	; Length of used buffer in r10
-	mov r10, rsi
-	sub r10, r12
-	inc r10
+	; Length of used buffer in r9
+	mov r9, rsi
+	sub r9, r10
+	inc r9
 
 nextDigit:
-	mov rax, r8
 	call fastDivMod10
-	add r9b, 0x30
-	mov byte [rsi], r9b
+	add cl, 0x30
+	mov byte [rsi], cl
 	dec rsi
-	cmp r8, 0
+	cmp rdi, 0
 	jg nextDigit
 	ret
 
+; input: rdi (number)
+; output: rdi (div result), rcx (mod result)
 ALIGN 32
 fastDivMod10:
-	; Store copy of rax in rbx
-	mov rbx, rax
+	; Mul expects rax register to be the first operand
+	mov rax, rdi
+	mov rcx, rdi
 
-	; Divide by 10 and save in rdx
-	mul r14
+	; Divide by 10 and save in rcx
+	mul r8
 	shr rdx, byte 2
-	mov r8, rdx
+	mov rdi, rdx
 
 	; Multiply by 10 and save in rax
 	lea rax, [rdx+rdx]
 	lea rax, [rax+rax*4]
 
 	; Subtract from actual value to get the remainder
-	sub rbx, rax
-	mov r9, rbx
+	sub rcx, rax
 
 	; Return
 	ret
