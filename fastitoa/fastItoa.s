@@ -58,18 +58,18 @@ signed:
 
 unsigned:
 	; Number of leading zeros
-	lzcnt rbx, rdi
+	lzcnt rax, rdi
 	jc has1digit
-	mov bl, byte [guessLog10+rbx]
-	mov rcx, [powersOf10+rbx]
+	mov al, byte [guessLog10+rax]
+	mov rcx, [powersOf10+rax]
 	cmp rdi, rcx
 	jl lower
 
 greaterEqual:
-	inc rbx
+	inc rax
 
 lower:
-	add rsi, rbx
+	add rsi, rax
 
 ALIGN 4
 has1digit:
