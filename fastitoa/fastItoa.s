@@ -1,4 +1,5 @@
 ; (C) Copyright 2019 Eduard Urbach
+bits 64
 global _start
 
 maxDigits equ 20
