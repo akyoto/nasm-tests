@@ -44,7 +44,7 @@ finish:
 ALIGN 32
 itoa:
 	mov r8, 0x6666666666666667
-	mov r10, rsi
+	xor r9, r9
 
 	; For positive numbers, jump straight to "unsigned".
 	; For negative numbers, we'll run the "signed" part.
@@ -54,12 +54,13 @@ itoa:
 signed:
 	mov byte [rsi], 45
 	inc rsi
+	inc r9
 	neg rdi
 
 unsigned:
 	; Number of leading zeros
 	lzcnt rax, rdi
-	jc has1digit
+	jc nextDigit
 	mov al, byte [guessLog10+rax]
 	mov rcx, [powersOf10+rax]
 	cmp rdi, rcx
@@ -70,13 +71,7 @@ greaterEqual:
 
 lower:
 	add rsi, rax
-
-ALIGN 4
-has1digit:
-	; Length of used buffer in r9
-	mov r9, rsi
-	sub r9, r10
-	inc r9
+	add r9, rax
 
 nextDigit:
 	call fastDivMod10
