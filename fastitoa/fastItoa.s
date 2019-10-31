@@ -2,7 +2,7 @@
 bits 64
 global _start
 
-maxDigits equ 20
+maxDigits equ 32
 iterations equ 100000000
 
 _start:
@@ -60,9 +60,9 @@ signed:
 unsigned:
 	; Number of leading zeros
 	lzcnt rax, rdi
-	jc nextDigit
+	jc isZero
 	mov al, byte [guessLog10+rax]
-	mov rcx, [powersOf10+rax]
+	mov rcx, qword [powersOf10+rax*8]
 	cmp rdi, rcx
 	jl lower
 
@@ -73,6 +73,7 @@ lower:
 	add rsi, rax
 	add r8, rax
 	mov rbx, 0x6666666666666667
+	dec rsi
 
 nextDigit:
 	call fastDivMod10
@@ -109,6 +110,11 @@ fastDivMod10:
 	; Return
 	ret
 
+isZero:
+	mov byte [rsi], 48
+	mov r8, 1
+	ret
+
 exit:
 	mov rax, 60
 	mov rdi, 0
@@ -143,5 +149,6 @@ section .rodata
 		1000000000000000, \
 		10000000000000000, \
 		100000000000000000, \
-		1000000000000000000
+		1000000000000000000, \
+		10000000000000000000
 
