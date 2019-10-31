@@ -27,7 +27,7 @@ finish:
 	; Write the generated string and return
 	mov rax, 1
 	mov rdi, 1
-	mov rdx, r9
+	mov rdx, r8
 	mov rsi, rsp
 	syscall
 
@@ -41,10 +41,9 @@ finish:
 	call exit
 
 ; input: rdi (number), rsi (buffer)
-ALIGN 32
+ALIGN 16
 itoa:
-	mov r8, 0x6666666666666667
-	xor r9, r9
+	xor r8, r8
 
 	; For positive numbers, jump straight to "unsigned".
 	; For negative numbers, we'll run the "signed" part.
@@ -52,9 +51,10 @@ itoa:
 	jns unsigned
 
 signed:
+	; Add the minus character
 	mov byte [rsi], 45
 	inc rsi
-	inc r9
+	inc r8
 	neg rdi
 
 unsigned:
@@ -71,7 +71,8 @@ greaterEqual:
 
 lower:
 	add rsi, rax
-	add r9, rax
+	add r8, rax
+	mov rbx, 0x6666666666666667
 
 nextDigit:
 	call fastDivMod10
@@ -84,14 +85,17 @@ nextDigit:
 
 ; input: rdi (number)
 ; output: rdi (div result), rcx (mod result)
-ALIGN 32
+ALIGN 16
 fastDivMod10:
-	; Mul expects rax register to be the first operand
+	; Divide by 10
 	mov rax, rdi
+	mul rbx
+
+	; mul needs some time to calculate rdx before we can access it
+	; insert other instructions here that we can do in the meantime
 	mov rcx, rdi
 
-	; Divide by 10 and save in rcx
-	mul r8
+	; Multiplication finished
 	shr rdx, byte 2
 	mov rdi, rdx
 
@@ -120,7 +124,6 @@ section .rodata
 	; 				18, 18, 18, 18, 19
 
 	guessLog10 db 19, 18, 18, 18, 18, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 13, 13, 13, 12, 12, 12, 12, 11, 11, 11, 10, 10, 10, 9, 9, 9, 9, 8, 8, 8, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0
-
 	powersOf10 dq \
 		1, \
 		10, \
