@@ -13,14 +13,14 @@ _start:
 	sub rsp, maxDigits
 
 	; Repeat n times
-	mov r12, iterations
+	mov r11, iterations
 
 again:
 	; Call itoa
-	mov rdi, r12
+	mov rdi, r11
 	mov rsi, rsp
 	call itoa
-	dec r12
+	dec r11
 	jnz again
 
 finish:
@@ -57,8 +57,6 @@ signed:
 	neg rdi
 
 unsigned:
-	mov r11, rsi
-
 	; Number of leading zeros
 	lzcnt rbx, rdi
 	jc has1digit
