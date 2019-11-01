@@ -13,14 +13,14 @@ _start:
 	sub rsp, maxDigits
 
 	; Repeat n times
-	mov r11, iterations
+	mov r11d, iterations
 
 again:
 	; Call itoa
-	mov rdi, r11
+	mov edi, r11d
 	mov rsi, rsp
 	call itoa
-	dec r11
+	dec r11d
 	jnz again
 
 finish:
