@@ -61,9 +61,8 @@ unsigned:
 	; Number of leading zeros
 	lzcnt rax, rdi
 	jc isZero
-	mov al, byte [guessLog10+rax]
-	mov rcx, qword [powersOf10+rax*8]
-	cmp rdi, rcx
+	movzx eax, byte [guessLog10+rax]
+	cmp rdi, qword [powersOf10+rax*8]
 	jl lower
 
 greaterEqual:
